@@ -16,13 +16,13 @@ class LoginController extends BaseController
     /**
      * @throws ValidationException
      */
-    public function __invoke(LoginRequest $request): JsonResponse
+    public function login(LoginRequest $request): JsonResponse
     {
         $user = $this->authenticateUser($request->email, $request->password);
 
         $token = $user->createToken($user->email)->plainTextToken;
 
-        return $this->sendResponse(['token' => $token], 'User login successfully.');
+        return $this->sendResponse(['token' => $token, 'user' => $user], 'User login successfully.');
     }
 
 

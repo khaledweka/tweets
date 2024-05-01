@@ -21,6 +21,9 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'username',
+        'phone',
+        'image',
     ];
 
     /**
@@ -44,5 +47,34 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+//==========methods
+    public function isFollowing(int $user_id): bool
+    {
+        return (bool)$this->following()->where('following_id', $user_id)->exists();
+    }
+
+    //==========relations
+
+    public function tweets(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Tweet::class);
+    }
+
+    public function followers(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(__CLASS__,
+            'followers',
+            'following_id',
+            'follower_id')->withTimestamps();
+    }
+
+    public function following(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(__CLASS__,
+            'followers',
+            'follower_id',
+            'following_id')->withTimestamps();
     }
 }

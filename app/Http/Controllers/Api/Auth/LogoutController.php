@@ -14,7 +14,7 @@ class LogoutController extends Controller
      * @param Request $request The HTTP request.
      * @return JsonResponse The JSON response.
      */
-    public function __invoke(Request $request): JsonResponse
+    public function logout(Request $request): JsonResponse
     {
         $request->user()->currentAccessToken()->delete();
         return response()->json(['message' => 'Logged out'], 200);
