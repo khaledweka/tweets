@@ -4,6 +4,7 @@ namespace App\Http\Requests\Api;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\Password;
 
 class RegisterRequest extends FormRequest
 {
@@ -25,8 +26,14 @@ class RegisterRequest extends FormRequest
         return [
             'name' => 'required|string',
             'email' => 'required|email|unique:users,email',
-            'password' => 'required|string|min:6|confirmed',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'password' => ['required', 'string', 'confirmed',
+                Password::min(8)
+                    ->letters()
+                    ->mixedCase()
+                    ->numbers()
+                    ->symbols()
+                    ->uncompromised()],
+            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:1024',
         ];
     }
 
@@ -45,6 +52,11 @@ class RegisterRequest extends FormRequest
             'password.required' => 'Password is required',
             'password.min' => 'Password must be at least 6 characters',
             'password.confirmed' => 'Passwords do not match',
+            'password.mixed_case' => 'Password must contain at least one uppercase and one lowercase letter',
+            'password.numbers' => 'Password must contain at least one number',
+            'password.symbols' => 'Password must contain at least one symbol',
+            'password.uncompromised' => 'Password is compromised',
+
         ];
     }
 
