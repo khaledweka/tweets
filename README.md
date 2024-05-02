@@ -16,6 +16,33 @@ Laravel.
 8. Register and start posting tweets
 9. Enjoy!
 
+## Sample Data
+
+The application uses MySQL to store data. The database schema is as follows:
+
+- database/tweets.sql
+
+## Api Documentation
+
+The application provides the following endpoints (attached Postman Collection) :
+
+- Tweets.postman_collection.json
+
+## Features
+
+- Register and login
+- Post tweets
+- Follow users
+- View tweets of followed users
+
+## Technologies
+
+- Laravel
+- PHP
+- MySQL
+- Laravel Sanctum
+- Redis
+
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
