@@ -15,41 +15,6 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
 
 Route::post('/login', [LoginController::class, 'login']);
 Route::post('/register', [RegisterController::class, 'register']);
-
-//create random users
-Route::get('/create-users/{count}', function ($count) {
-    $users = [];
-    for ($i = 0; $i < $count; $i++) {
-        $name = \Faker\Factory::create()->name;
-        $email = \Faker\Factory::create()->email;
-        $userName = \Faker\Factory::create()->userName;
-        $password = bcrypt('password');
-        $users[] = ['name' => $name, 'email' => $email, 'username' => $userName, 'password' => $password];
-    }
-    \App\Models\User::insert($users);
-    return response()->json(['message' => 'users created']);
-});
-//create random tweets
-Route::get('/create-tweets/{count}', function ($count) {
-    $users = \App\Models\User::all();
-    $tweets = [];
-    for ($i = 0; $i < $count; $i++) {
-        $userId = $users->random()->id;
-        $text = \Faker\Factory::create()->text(140);
-        $tweets[] = ['user_id' => $userId, 'body' => $text];
-    }
-    \App\Models\Tweet::insert($tweets);
-    return response()->json(['message' => 'tweets created']);
-});
-//create random followers with no duplicates
-Route::get('/create-followers', function () {
-    $users = \App\Models\User::all();
-    $users->each(function ($user) use ($users) {
-        $user->following()->sync($users->random(10));
-    });
-    return response()->json(['message' => 'followers created']);
-});
-
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/logout', [LogoutController::class, 'logout']);
 

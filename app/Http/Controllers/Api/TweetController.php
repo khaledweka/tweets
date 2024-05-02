@@ -12,9 +12,17 @@ class TweetController extends Controller
     public function index()
     {
         //get all tweets from people I follow
-        $following = auth()->user()->following()->pluck('users.id');
 
-        //add redis cache to fastify the response
+        //if not, get the data from the database and store it in the cache
+        if (cache()->has('tweets')){
+            $tweets = cache()->get('tweets');
+            return response()->json([
+                'message' => 'Data Found',
+                'data' => $tweets,
+            ]);
+        }
+        //add redis cache to fastify the response and check if their data in cache read from it only
+        $following = auth()->user()->following()->pluck('users.id');
         $tweets = cache()->remember('tweets', 60, function () use ($following) {
             return Tweet::whereIn('user_id', $following)->paginate(15);
         });
